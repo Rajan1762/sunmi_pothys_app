@@ -1,0 +1,25 @@
+import '../services/printing_service/sunmi.dart';
+const String apiBaseUrl = 'https://pothysapi.brositecom.com/api/';
+
+const String kUserName = '1';
+const String kPassword = '1';
+const String kAppName = "Pothys Parking App";
+const String sp_isUserAuthenticated = 'isUserAuthenticated';
+const String sp_loginUserName = 'loginUserName';
+const String settlementPassword = 'Pothys@123';
+// const String userLogStatusString = 'UserLoginStatus';
+const String kVehicleDBName = 'vehicleDB';
+const String kVehicleDBTableName = 'parkingTable';
+const String kSuccess = 'success';
+const String bikeString = 'BIKE';
+const String carString = 'CAR';
+const String cashString = 'CASH';
+const String upiString = 'UPI';
+// bool userLogStatusVal = false;
+const int carBaseAmount = 100;
+const int bikeBaseAmount = 50;
+const int carAdditionalHourAmount = 50;
+const int bikeAdditionalHourAmount = 20;
+double receiptTextSize = 18;
+double receiptHeight = 822;
+double receiptWidth = 370;
