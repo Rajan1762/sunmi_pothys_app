@@ -23,6 +23,7 @@ class ScannerScreen extends StatelessWidget {
             hideGalleryButton: false,
             controller: _scannerController,
             onDetect: (BarcodeCapture capture) {
+              print('capture = $capture');
               scannedValue.clear();
               scannedValue.write(capture.barcodes.first.rawValue);
               if (kDebugMode) {

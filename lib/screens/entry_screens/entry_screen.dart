@@ -58,6 +58,7 @@ class _EntryScreenState extends State<EntryScreen> {
   }
 
   _clearDetails() {
+    cancelReprintStatus = false;
     _isLoading = true;
     // _isPaymentRetry = false;
     isBikeSelected = false;
@@ -93,12 +94,16 @@ class _EntryScreenState extends State<EntryScreen> {
   Future<void> printEntryReceipt(BuildContext context) async {
     await sendDataToSDK(context,reprintStatus, parkingDataModel);
     if (context.mounted) {
-      showAlertDialogWithCancel(
+      await showAlertDialogWithCancel(
           context: context,
           title: 'Second Copy ?',
           message: 'Press "OK" to print second copy.',
           onPressedFun: sendDataToSDK,
           parkingDataModel: parkingDataModel);
+      if(cancelReprintStatus)
+        {
+          _clearDetails();
+        }
     }
   }
 
@@ -119,6 +124,10 @@ class _EntryScreenState extends State<EntryScreen> {
     img.Image resizedImage = img.copyResize(baseSizeImage!, width: 383, height: 750);
     Uint8List resizedUint8List = Uint8List.fromList(img.encodePng(resizedImage));
     await _sunmiPrinter.dummyPrint(img: resizedUint8List);
+    if(reprintStatus)
+    {
+      _clearDetails();
+    }
     // _sunmiPrinter.dummyPrint(img: bytes);
     //TODO
     // await EzetapSdk.printBitmap(_base64Image);
@@ -440,7 +449,12 @@ class _EntryScreenState extends State<EntryScreen> {
                                 if (s != '') {
                                   showSnackBar(context: context, message: s);
                                 }
-                                _clearDetails();
+                                // Future.delayed(const Duration(seconds: 2),(){
+                                //   if(!reprintStatus)
+                                //   {
+                                //     _clearDetails();
+                                //   }
+                                // });
                               }
                             },
                           )

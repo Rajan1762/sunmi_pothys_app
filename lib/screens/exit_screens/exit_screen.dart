@@ -372,7 +372,7 @@ class _ExitScreenState extends State<ExitScreen> {
                   ),
                 ),
                 Text(
-                  ': ${parkingData.vehicletype}',
+                  ': ${parkingData.vehicletype ?? ''}',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 15.0,

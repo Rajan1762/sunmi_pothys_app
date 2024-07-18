@@ -68,7 +68,7 @@ class EntryScreenReceiptWidget extends StatelessWidget {
               ),
               const SizedBox(height: 10.0),
               Text(
-                '*** Pothys Parking ${reprintStatus ? 'Exit' : 'Receipt'} ***',
+                '*** Pothys Parking ${reprintStatus ? 'Claim Receipt' : 'Receipt'} ***',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: receiptTextSize,
@@ -321,7 +321,7 @@ Widget getReceiptWidget({required parkingData,
                 ),
                 const SizedBox(height: 5.0),
                 Text(
-                  '*** Pothys Parking ${reprintStatus ? 'Exit' : 'Receipt'} ***',
+                  '*** Pothys Parking ${reprintStatus ? 'Claim Receipt' : 'Receipt'} ***',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontSize: receiptTextSize,

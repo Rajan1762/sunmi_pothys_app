@@ -2,32 +2,52 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:sunmi_pothys_parking_app/utils/colors.dart';
 
 import 'constants.dart';
 
 showUpiAlertDialog({required BuildContext context,required String name, required String transactionNote,required double amount}) {
-  const String upiId = 'd.rajan1762-3@okhdfcbank';
+  // const String upiId = 'd.rajan1762-3@okhdfcbank';
   // final String name = 'Rajan';
   // final String transactionNote = 'Payment for testing';
   // final double amount = vehicleType == bikeString ? 50.0 : 100.0;
   // Generate UPI QR string
 
-  final String upiUrl = 'upi://pay?pa=$upiId&pn=$name&am=$amount&tn=$transactionNote';
+  //TODO
+  // final String upiUrl = 'upi://pay?pa=$upiId&pn=$name&am=$amount&tn=$transactionNote';
+  final String upiUrl = 'upi://pay?pa=BHARATPE907720031095@yesbankltd&pn=POTHYS PRIVATE LIMIT&am=$amount&cu=INR&tn=Pay To POTHYS PRIVATE LIMIT&tr=WHATSAPP_QR';
+
   showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           insetPadding: const EdgeInsets.all(0),
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(5))),
           child: SizedBox(
-            height: 300,
-            width: 300,
-            child: Center(
-              child: QrImageView(
-                data: upiUrl,
-                version: QrVersions.auto,
-                size: 220.0,
+            height: 315,
+            width: 270,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text('Rs.${amount.toInt()}',style: TextStyle(color : appThemeColor ,fontSize: 24,fontWeight: FontWeight.w600)),
+                  QrImageView(
+                    data: upiUrl,
+                    version: QrVersions.auto,
+                    size: 212.0,
+                  ),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      padding: WidgetStateProperty.all<EdgeInsetsGeometry?>(EdgeInsets.symmetric(horizontal: 40))
+                    ),
+                      onPressed: (){
+                    Navigator.of(context).pop();
+                  }, child: Text('Done'))
+                ],
               ),
             ),
           ),

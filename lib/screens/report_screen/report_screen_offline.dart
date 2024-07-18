@@ -37,6 +37,7 @@ class _ReportScreenState extends State<ReportScreen> {
   int totalOut = 0;
   int totalPending = 0;
   int openingVehicleCount = 0;
+  bool _isLoading = false;
   ScreenshotController controller = ScreenshotController();
   final Sunmi _sunmiPrinter = Sunmi();
 
@@ -172,6 +173,7 @@ class _ReportScreenState extends State<ReportScreen> {
                   const SizedBox(
                     height: 20,
                   ),
+                  _isLoading ? const CircularProgressIndicator() :
                   SizedBox(
                     width: 120,
                     child: ElevatedButton(
@@ -248,6 +250,7 @@ class _ReportScreenState extends State<ReportScreen> {
   // }
 
   Future<void> _printDetails() async {
+    setState(() => _isLoading=true);
     String textToPrint = "\n--------------------------------"
         "\n   *** Pothys Parking App ***"
         "\n\n    [ Daily IN/OUT Report ]"
@@ -262,6 +265,7 @@ class _ReportScreenState extends State<ReportScreen> {
     img.Image? baseSizeImage = img.decodeImage(bytes);
     img.Image resizedImage = img.copyResize(baseSizeImage!, width: 383, height: 750);
     Uint8List resizedUint8List = Uint8List.fromList(img.encodePng(resizedImage));
-    _sunmiPrinter.dummyPrint(img: resizedUint8List);
+    await _sunmiPrinter.dummyPrint(img: resizedUint8List);
+    setState(() => _isLoading=false);
   }
 }

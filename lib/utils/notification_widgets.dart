@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:sunmi_pothys_parking_app/utils/colors.dart';
 import 'package:sunmi_pothys_parking_app/utils/styles.dart';
 import 'dart:async';
 
 import '../models/parking_data_model.dart';
+import 'common_values.dart';
 
 
 void showSnackBar({required BuildContext context, required String message}) {
@@ -15,8 +17,8 @@ void showCustomAlertDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: title!=null?Text(title):null,
-        content: message!=null?Text(message):null,
+        title: title!=null?Text(title,style: TextStyle(color: appThemeColor),textAlign: TextAlign.center):null,
+        content: message!=null?Text(message,):null,
         actions: <Widget>[
           TextButton(
             child: const Text('OK'),
@@ -31,7 +33,7 @@ void showCustomAlertDialog(
   );
 }
 
-void showAlertDialogWithCancel(
+Future<void> showAlertDialogWithCancel(
     {required BuildContext context,
       required String title,
       required String message,
@@ -39,6 +41,7 @@ void showAlertDialogWithCancel(
       required ParkingDataModel? parkingDataModel}) async {
   showDialog(
     context: context,
+    barrierDismissible: false,
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text(title),
@@ -55,6 +58,7 @@ void showAlertDialogWithCancel(
           TextButton(
             child: const Text('Cancel'),
             onPressed: () {
+              cancelReprintStatus=true;
               Navigator.of(context).pop();
             },
           ),
