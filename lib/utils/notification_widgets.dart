@@ -39,7 +39,7 @@ Future<void> showAlertDialogWithCancel(
       required String message,
       required Function(BuildContext,bool, ParkingDataModel?) onPressedFun,
       required ParkingDataModel? parkingDataModel}) async {
-  showDialog(
+  return showDialog(
     context: context,
     barrierDismissible: false,
     builder: (BuildContext context) {

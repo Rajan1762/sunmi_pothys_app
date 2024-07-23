@@ -97,8 +97,8 @@ class ReportPgReceiptWidget extends StatelessWidget {
   }
 }
 
-Widget getReportPgReceiptWidget({required bikeCount,
-required carCount,
+Widget getReportPgReceiptWidget({required entryBikeCount,required exitBikeCount,
+required entryCarCount,required exitCarCount,
 required currentDate})
 {
   return Container(
@@ -145,7 +145,10 @@ required currentDate})
                     title: 'Type', materialColor: Colors.black)),
             Expanded(
                 child: SettlementHeaderWidget(
-                    title: 'Count', materialColor: Colors.black)),
+                    title: 'Entry Count', materialColor: Colors.black)),
+            Expanded(
+                child: SettlementHeaderWidget(
+                    title: 'Exit Count', materialColor: Colors.black)),
           ],
         ),
         Row(
@@ -153,7 +156,10 @@ required currentDate})
             const Expanded(child: SettlementSubWidget(content: 'Bike')),
             Expanded(
                 child: SettlementSubWidget(
-                    content: bikeCount.toString())),
+                    content: entryBikeCount.toString())),
+            Expanded(
+                child: SettlementSubWidget(
+                    content: exitBikeCount.toString())),
           ],
         ),
         Row(
@@ -161,7 +167,10 @@ required currentDate})
             const Expanded(child: SettlementSubWidget(content: 'Car')),
             Expanded(
                 child: SettlementSubWidget(
-                    content: carCount.toString())),
+                    content: entryCarCount.toString())),
+            Expanded(
+                child: SettlementSubWidget(
+                    content: exitCarCount.toString())),
           ],
         ),
         Row(
@@ -169,7 +178,10 @@ required currentDate})
             const Expanded(child: SettlementSubWidget(content: 'Total')),
             Expanded(
                 child: SettlementSubWidget(
-                    content: "${bikeCount + carCount}")),
+                    content: "${entryBikeCount + entryCarCount}")),
+            Expanded(
+                child: SettlementSubWidget(
+                    content: "${exitBikeCount + exitCarCount}")),
           ],
         ),
       ],

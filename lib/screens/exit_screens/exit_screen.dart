@@ -87,13 +87,14 @@ class _ExitScreenState extends State<ExitScreen> {
           (difference.inHours == 3 &&
               difference.inMinutes % 60 == 0 &&
               difference.inSeconds % 60 == 0)) {
-        parkingData.outamount = bikeBaseAmount.toString();
+        // parkingData.outamount = bikeBaseAmount.toString();
       } else {
         int additionalHours = difference.inMinutes > 180 ||
                 (difference.inMinutes == 180 && difference.inSeconds > 0)
             ? ((difference.inMinutes - 180) / 60).ceil()
             : 0;
-        parkingData.outamount = '${bikeBaseAmount + (additionalHours * bikeAdditionalHourAmount)}';
+        parkingData.outamount = '${(additionalHours * bikeAdditionalHourAmount)}';
+        // parkingData.outamount = '${bikeBaseAmount + (additionalHours * bikeAdditionalHourAmount)}';
       }
       parkingData.outamount = double.parse(parkingData.outamount ?? '0') <= bikeBaseAmount
               ? '0.0'
@@ -103,13 +104,14 @@ class _ExitScreenState extends State<ExitScreen> {
           (difference.inHours == 3 &&
               difference.inMinutes % 60 == 0 &&
               difference.inSeconds % 60 == 0)) {
-        parkingData.outamount = carBaseAmount.toString();
+        // parkingData.outamount = carBaseAmount.toString();
       } else {
         int additionalHours = difference.inMinutes > 180 ||
                 (difference.inMinutes == 180 && difference.inSeconds > 0)
             ? ((difference.inMinutes - 180) / 60).ceil()
             : 0;
-        parkingData.outamount = '${carBaseAmount + (additionalHours * carAdditionalHourAmount)}';
+        parkingData.outamount = '${(additionalHours * carAdditionalHourAmount)}';
+        // parkingData.outamount = '${carBaseAmount + (additionalHours * carAdditionalHourAmount)}';
       }
       parkingData.outamount = double.parse(parkingData.outamount ?? '0') <= carBaseAmount
               ? '0.0'
@@ -118,26 +120,16 @@ class _ExitScreenState extends State<ExitScreen> {
     print('amount = ${parkingData.outamount}');
   }
 
+
   Future<void> _scanQRCode(BuildContext context) async {
+
     print('object');
     setState(() => _isLoading = true);
-    await Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => ScannerScreen()));
+    //TODO
+    // await Navigator.of(context).push(MaterialPageRoute(builder: (context) => QRCodeScanner()));
+    await Navigator.of(context).push(MaterialPageRoute(builder: (context) => ScannerScreen()));
     print('returned Scanned Value = ${scannedValue.toString()}');
     _splitString(scannedValue.toString());
-    // try {
-    //   ParkingDataModel? parkingDbData = await dbHelper
-    //       ?.retrieveParkingDataByVehicleNo(parkingData.vehicleno ?? '');
-    //   if (parkingDbData != null) {
-    //     parkingData = parkingDbData;
-    //   }
-    // } catch (e) {
-    //   print('getVehicleDetail Error occurred e = $e');
-    //   if (context.mounted) {
-    //     showCustomAlertDialog(
-    //         context: context, title: 'Error!', message: e.toString());
-    //   }
-    // }
     if (parkingData.vehicleno != null) {
       _tariffCalculation();
     }else{
@@ -170,8 +162,9 @@ class _ExitScreenState extends State<ExitScreen> {
           {
             showCustomAlertDialog(context: context,title: 'Success',message: 'Vehicle details saved successfully');
             printEntryReceipt(context);
-          }
-        _clearDetails();
+          }else{
+          _clearDetails();
+        }
       } catch (e) {
         print('_updateAndSaveData Error occurred e = $e');
         if (context.mounted) {
@@ -186,12 +179,16 @@ class _ExitScreenState extends State<ExitScreen> {
   Future<void> printEntryReceipt(BuildContext context) async {
     await sendDataToSDK(context,reprintStatus,parkingData);
     if (context.mounted) {
-      showAlertDialogWithCancel(
+     await showAlertDialogWithCancel(
           context: context,
           title: 'Second Copy ?',
           message: 'Press "OK" to print second copy.',
           onPressedFun: sendDataToSDK,
           parkingDataModel: parkingData);
+    }
+    if(cancelReprintStatus)
+    {
+      _clearDetails();
     }
   }
 
@@ -207,6 +204,10 @@ class _ExitScreenState extends State<ExitScreen> {
     img.Image resizedImage = img.copyResize(baseSizeImage!, width: 383, height: 750);
     Uint8List resizedUint8List = Uint8List.fromList(img.encodePng(resizedImage));
     await _sunmiPrinter.dummyPrint(img: resizedUint8List);
+    if(reprintStatus)
+    {
+      _clearDetails();
+    }
   }
 
   @override

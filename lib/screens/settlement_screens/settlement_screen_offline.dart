@@ -225,6 +225,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
         {
           print('cash = ${double.parse(v.amount ?? '0.0')}');
           cashValue += double.parse(v.amount ?? '0.0');
+          cashValue += double.parse(v.outamount ?? '0.0');
           if(v.vehicletype==carString)
             {
               cashCarCount += 1;
@@ -234,6 +235,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
         }else{
           print('upi = ${double.parse(v.amount ?? '0.0')}');
           upiValue += double.parse(v.amount ?? '0.0');
+          upiValue += double.parse(v.outamount ?? '0.0');
           if(v.vehicletype==bikeString)
           {
             upiBikeCount += 1;
@@ -242,7 +244,6 @@ class _SettlementScreenState extends State<SettlementScreen> {
           }
         }
       });
-
 
       setState(() {
         cASH_Value = cashValue.toString();
@@ -361,7 +362,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
                     Expanded(
                         child: SettlementSubWidget(
                             content:
-                            '${cashCarCount + upiBikeCount}')),
+                            '${cashCarCount + upiCarCount}')),
                     Expanded(
                         child: SettlementSubWidget(
                             content:

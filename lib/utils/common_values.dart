@@ -13,6 +13,7 @@ enum VehicleTextEnum { type1, type2, type3, type4 }
 VehicleDatabaseHelper? dbHelper;
 StringBuffer scannedValue = StringBuffer();
 bool cancelReprintStatus = false;
+bool torchLightStatus = true;
 
 ParkingDataModel returnEmptyParkingModel() => ParkingDataModel(vehicletype: null, vehicleno: null, indate: null, intime: null, createdate: null, status: null, counter: deviceSerialNo, userid: loginUserName, amount: null, paymode: null, paystatus: null, paytxnref: null, outdate: null, outtime: null, duration: null, outcounter: null, outuserid: null, outamount: null, totamount: null, outpaymode: null, outpaystatus: null, outpaytxnref: null);
 class VehicleValueModel{

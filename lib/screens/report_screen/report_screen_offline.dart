@@ -41,8 +41,10 @@ class _ReportScreenState extends State<ReportScreen> {
   ScreenshotController controller = ScreenshotController();
   final Sunmi _sunmiPrinter = Sunmi();
 
-  int bikeCount = 0;
-  int carCount = 0;
+  int entryBikeCount = 0;
+  int entryCarCount = 0;
+  int exitBikeCount = 0;
+  int exitCarCount = 0;
 
   @override
   void initState() {
@@ -53,30 +55,40 @@ class _ReportScreenState extends State<ReportScreen> {
     // _getDetails();
   }
 
-  _getDbData({required String currentDate})async{
-    List<ParkingDataModel>? parkingVehicleList = await dbHelper?.getVehiclesForCurrentDate(currentDate: currentDate);
-    carCount = 0;
-    bikeCount = 0;
-    if(context.mounted)
-      {
-          parkingVehicleList?.forEach((v){
-            if(v.vehicletype==carString)
-            {
-              carCount += 1;
-            }else{
-              bikeCount += 1;
-            }
-        });
-          setState(() {});
-      }
+  _getDbData({required String currentDate}) async {
+    List<ParkingDataModel>? parkingVehicleList =
+        await dbHelper?.getVehiclesForCurrentDate(currentDate: currentDate);
+    entryBikeCount = 0;
+    entryCarCount = 0;
+    exitBikeCount = 0;
+    exitCarCount = 0;
+
+    if (context.mounted) {
+      parkingVehicleList?.forEach((v) {
+        if (v.vehicletype == carString) {
+          if (v.outtime == null) {
+            entryCarCount += 1;
+          } else {
+            exitCarCount += 1;
+          }
+        } else {
+          if (v.outtime == null) {
+            entryBikeCount += 1;
+          } else {
+            exitBikeCount += 1;
+          }
+        }
+      });
+      setState(() {});
+    }
   }
 
   _getNetworkData() async {
     print("settlementData before = $reportPgModelData");
-    reportPgModelData = await getReportPgData(dateSelectedYYYYMMDD,
-        counterCheckValue ? "" : deviceSerialNo);
+    reportPgModelData = await getReportPgData(
+        dateSelectedYYYYMMDD, counterCheckValue ? "" : deviceSerialNo);
     print("settlementData after = $reportPgModelData");
-    if (reportPgModelData != null&&context.mounted){
+    if (reportPgModelData != null && context.mounted) {
       setState(() {
         openingVehicleCount =
             int.parse(reportPgModelData?.bIKEOpeningCount ?? '0') +
@@ -110,79 +122,88 @@ class _ReportScreenState extends State<ReportScreen> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(10,20,10,10),
+          padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+              const SizedBox(
+                  height: 80,
+                  width: 80,
+                  child: Image(image: AssetImage('assets/app-logo.png'))),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20.0, top: 10),
+                child: Text(
+                  'Report Page',
+                  style: appBarTextStyle(),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: ElevatedButton(
+                  onPressed: () => _selectDate(context),
+                  child: Text('Select Date : $dateSelectedDDMMYYYY'),
+                ),
+              ),
+              const SizedBox(height: 20.0),
+              Row(
                 children: [
-                  const SizedBox(
-                      height: 80,
-                      width: 80,
-                      child: Image(image: AssetImage('assets/app-logo.png'))),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 20.0,top: 10),
-                    child: Text(
-                      'Report Page',
-                      style: appBarTextStyle(),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: ElevatedButton(
-                      onPressed: () => _selectDate(context),
-                      child: Text('Select Date : $dateSelectedDDMMYYYY'),
-                    ),
-                  ),
-                  const SizedBox(height: 20.0),
-                  Row(
-                    children: [
-                      Expanded(
-                          child: SettlementHeaderWidget(
-                              title: 'Type', materialColor: appThemeColor)),
-                      Expanded(
-                          child: SettlementHeaderWidget(
-                              title: 'Count', materialColor: appThemeColor)),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      const Expanded(child: SettlementSubWidget(content: 'Bike')),
-                      Expanded(
-                          child: SettlementSubWidget(
-                              content: bikeCount.toString())),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      const Expanded(child: SettlementSubWidget(content: 'Car')),
-                      Expanded(
-                          child: SettlementSubWidget(
-                              content: carCount.toString())),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      const Expanded(child: SettlementSubWidget(content: 'Total')),
-                      Expanded(
-                          child: SettlementSubWidget(
-                              content: "${bikeCount + carCount}")),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  _isLoading ? const CircularProgressIndicator() :
-                  SizedBox(
-                    width: 120,
-                    child: ElevatedButton(
-                      onPressed: _printDetails,
-                      child: const Text('Print'),
-                    ),
-                  ),
+                  Expanded(
+                      child: SettlementHeaderWidget(
+                          title: 'Type', materialColor: appThemeColor)),
+                  Expanded(
+                      child: SettlementHeaderWidget(
+                          title: 'Entry Count', materialColor: appThemeColor)),
+                  Expanded(
+                      child: SettlementHeaderWidget(
+                          title: 'Exit Count', materialColor: appThemeColor)),
                 ],
               ),
+              Row(
+                children: [
+                  const Expanded(child: SettlementSubWidget(content: 'Bike')),
+                  Expanded(
+                      child: SettlementSubWidget(
+                          content: entryBikeCount.toString())),
+                  Expanded(
+                      child: SettlementSubWidget(
+                          content: exitBikeCount.toString())),
+                ],
+              ),
+              Row(
+                children: [
+                  const Expanded(child: SettlementSubWidget(content: 'Car')),
+                  Expanded(
+                      child: SettlementSubWidget(
+                          content: entryCarCount.toString())),
+                  Expanded(
+                      child: SettlementSubWidget(
+                          content: exitCarCount.toString())),
+                ],
+              ),
+              Row(
+                children: [
+                  const Expanded(child: SettlementSubWidget(content: 'Total')),
+                  Expanded(
+                      child: SettlementSubWidget(
+                          content: "${entryBikeCount + entryCarCount}")),
+                  Expanded(
+                      child: SettlementSubWidget(
+                          content: "${exitBikeCount + exitCarCount}")),
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              _isLoading
+                  ? const CircularProgressIndicator()
+                  : SizedBox(
+                      width: 120,
+                      child: ElevatedButton(
+                        onPressed: _printDetails,
+                        child: const Text('Print'),
+                      ),
+                    ),
             ],
           ),
         ),
@@ -193,9 +214,9 @@ class _ReportScreenState extends State<ReportScreen> {
   _formatDateString() {
     setState(() {
       dateSelectedYYYYMMDD =
-      "${selectedDate.year.toString().padLeft(4, '0')}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}";
+          "${selectedDate.year.toString().padLeft(4, '0')}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}";
       dateSelectedDDMMYYYY =
-      "${selectedDate.day.toString().padLeft(2, '0')}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.year.toString().padLeft(4, '0')}";
+          "${selectedDate.day.toString().padLeft(2, '0')}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.year.toString().padLeft(4, '0')}";
     });
   }
 
@@ -206,9 +227,9 @@ class _ReportScreenState extends State<ReportScreen> {
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
     if (picked != null && picked != selectedDate) {
-        selectedDate = picked;
-        print('selectedDate = $selectedDate');
-        _formatDateString();
+      selectedDate = picked;
+      print('selectedDate = $selectedDate');
+      _formatDateString();
       _getDbData(currentDate: '$selectedDate');
       // _getNetworkData();
       // _getDetails();
@@ -250,22 +271,28 @@ class _ReportScreenState extends State<ReportScreen> {
   // }
 
   Future<void> _printDetails() async {
-    setState(() => _isLoading=true);
+    setState(() => _isLoading = true);
     String textToPrint = "\n--------------------------------"
         "\n   *** Pothys Parking App ***"
         "\n\n    [ Daily IN/OUT Report ]"
         "\n\n   DATE  : $dateSelectedDDMMYYYY"
         "\n--------------------------------";
-        final bytes = await controller.captureFromWidget(
-            getReportPgReceiptWidget(
-            currentDate: textToPrint, bikeCount: bikeCount, carCount: carCount),
+    final bytes = await controller.captureFromWidget(
+        getReportPgReceiptWidget(
+            currentDate: textToPrint,
+            entryBikeCount: entryBikeCount,
+            entryCarCount: entryCarCount,
+            exitBikeCount: exitBikeCount,
+            exitCarCount: exitCarCount),
         pixelRatio: 2.0,
         context: context);
     // _base64Image = base64Encode(bytes);
     img.Image? baseSizeImage = img.decodeImage(bytes);
-    img.Image resizedImage = img.copyResize(baseSizeImage!, width: 383, height: 750);
-    Uint8List resizedUint8List = Uint8List.fromList(img.encodePng(resizedImage));
+    img.Image resizedImage =
+        img.copyResize(baseSizeImage!, width: 383, height: 750);
+    Uint8List resizedUint8List =
+        Uint8List.fromList(img.encodePng(resizedImage));
     await _sunmiPrinter.dummyPrint(img: resizedUint8List);
-    setState(() => _isLoading=false);
+    setState(() => _isLoading = false);
   }
 }
